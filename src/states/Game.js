@@ -28,28 +28,30 @@ export default class extends Phaser.State {
     banner.anchor.setTo(0.5)
 
     this.music = this.add.audio('gameMusic');
+    this.music.volume = .5;
     this.music.play();
 
-    this.topWall = this.createWall(
-      this.game.world.centerX - 200
-      , this.game.world.centerY - 216
-      , 'wall'
+    this.createWallHor(
+      this.game.world.centerX - (32 * 8) - 16
+      , this.game.world.centerY - (32 * 8) - 16
+      , 16, 'wall'
     );
-    this.bottomWall = this.createWall(
-      this.game.world.centerX - 200
-      , this.game.world.centerY + 216
-      , 'wall'
+    this.createWallVert(
+      this.game.world.centerX - (32 * 8) + 16
+      , this.game.world.centerY - (32 * 8) - 16
+      , 16, 'wall'
     );
-    this.rightWall = this.createWall(
-      this.game.world.centerX + 168
-      , this.game.world.centerY - 184
-      , 'vertWall'
+    this.createWallVert(
+      this.game.world.centerX + (32 * 8) - 16
+      , this.game.world.centerY - (32 * 8) - 16
+      , 16, 'wall'
     );
-    this.leftWall = this.createWall(
-      this.game.world.centerX - 200
-      , this.game.world.centerY - 184
-      , 'vertWall'
+    this.createWallHor(
+      this.game.world.centerX - (32 * 8) - 16
+      , this.game.world.centerY + (32 * 8) + 16
+      , 16, 'wall'
     );
+
 
     // set the sprite width to 30% of the game width
     // setResponsiveWidth(this.mushroom, 30, this.game.world)
@@ -85,13 +87,39 @@ export default class extends Phaser.State {
     }
   }
 
-  createWall(x, y, asset) {
+  createWallSegment(x, y, asset) {
     let wall = this.add.sprite(x, y, asset);
 
     this.walls.add(wall);
 
     wall.body.immovable = true;
 
-    return wall;
+    console.log('Creating wall: ', x, y);
+  }
+
+  createWallVert(startPosx, startPosY, len, asset) {
+    const tileSize = 32;
+
+    var posx = startPosx;
+    var posy = startPosY;
+
+    for (var i = 0; i < len; i++) {
+      posy += tileSize;
+
+      this.createWallSegment(posx, posy, 'wall');
+    }
+  }
+
+  createWallHor(startPosx, startPosY, len, asset) {
+    const tileSize = 32;
+
+    var posx = startPosx;
+    var posy = startPosY;
+
+    for (var i = 0; i < len; i++) {
+      posx += tileSize;
+
+      this.createWallSegment(posx, posy, 'wall');
+    }
   }
 }
