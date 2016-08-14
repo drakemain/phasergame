@@ -10,7 +10,12 @@ export default class extends Phaser.State {
   create () {
     this.physics.startSystem(Phaser.Physics.ARCADE);
 
-    this.inputKeys = this.input.keyboard.createCursorKeys();
+    this.inputKeys = this.input.keyboard.addKeys({
+      'up': Phaser.KeyCode.W,
+      'down': Phaser.KeyCode.S,
+      'left': Phaser.KeyCode.A,
+      'right': Phaser.KeyCode.D
+    });
 
     this.walls = this.add.physicsGroup();
     this.walls.enableBody = true;
@@ -28,30 +33,29 @@ export default class extends Phaser.State {
     banner.anchor.setTo(0.5)
 
     this.music = this.add.audio('gameMusic');
-    this.music.volume = .5;
+    this.music.volume = .25;
     this.music.play();
 
-    this.createWallHor(
+    this.createWallHorizontal(
       this.game.world.centerX - (32 * 8) - 16
       , this.game.world.centerY - (32 * 8) - 16
       , 16, 'wall'
     );
-    this.createWallVert(
+    this.createWallVertical(
       this.game.world.centerX - (32 * 8) + 16
       , this.game.world.centerY - (32 * 8) - 16
       , 16, 'wall'
     );
-    this.createWallVert(
+    this.createWallVertical(
       this.game.world.centerX + (32 * 8) - 16
       , this.game.world.centerY - (32 * 8) - 16
       , 16, 'wall'
     );
-    this.createWallHor(
+    this.createWallHorizontal(
       this.game.world.centerX - (32 * 8) - 16
       , this.game.world.centerY + (32 * 8) + 16
       , 16, 'wall'
     );
-
 
     // set the sprite width to 30% of the game width
     // setResponsiveWidth(this.mushroom, 30, this.game.world)
@@ -71,19 +75,21 @@ export default class extends Phaser.State {
   }
 
   playerMovement() {
+    const moveSpeed = 200;
+
     this.player.body.velocity.x = 0;
     this.player.body.velocity.y = 0;
 
     if (this.inputKeys.left.isDown) {
-      this.player.body.velocity.x = -100;
+      this.player.body.velocity.x = -moveSpeed;
     } else if (this.inputKeys.right.isDown) {
-      this.player.body.velocity.x = 100;
+      this.player.body.velocity.x = moveSpeed;
     }
 
     if (this.inputKeys.up.isDown) {
-      this.player.body.velocity.y = -100;
+      this.player.body.velocity.y = -moveSpeed;
     } else if (this.inputKeys.down.isDown) {
-      this.player.body.velocity.y = 100;
+      this.player.body.velocity.y = moveSpeed;
     }
   }
 
@@ -97,7 +103,7 @@ export default class extends Phaser.State {
     console.log('Creating wall: ', x, y);
   }
 
-  createWallVert(startPosx, startPosY, len, asset) {
+  createWallVertical(startPosx, startPosY, len, asset) {
     const tileSize = 32;
 
     var posx = startPosx;
@@ -110,7 +116,7 @@ export default class extends Phaser.State {
     }
   }
 
-  createWallHor(startPosx, startPosY, len, asset) {
+  createWallHorizontal(startPosx, startPosY, len, asset) {
     const tileSize = 32;
 
     var posx = startPosx;
